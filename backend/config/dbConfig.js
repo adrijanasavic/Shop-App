@@ -1,12 +1,11 @@
-require("dotenv").config()
-console.log(process.env.MONGO_PASS);
+require("dotenv").config();
 
-const MONGO_URL =  process.env.MONGO_URL;
+const MONGO_URL = process.env.MONGO_URL;
 
 const mongooseOptions = {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-    useCreateIndex: true,
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+  useCreateIndex: true,
 };
 
-module.exports = { MONGO_URL, mongooseOptions}
+module.exports = { MONGO_URL, mongooseOptions };

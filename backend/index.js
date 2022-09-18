@@ -16,15 +16,38 @@ app.use(express.json());
 
 app.post("/api/login", (req, res) => {
   const reqBody = req.body;
-  console.log(reqBody);
 
   const foundUser = Users.findOne(reqBody, (err, data) => {
     if (err) {
       const errMsg = `Error on getting user from DB:${err}`;
       console.log(errMsg);
       res.send(errMsg);
-    } else {
-      res.send(data);
+      return;
+    }
+    res.send(data || "Use not found");
+  });
+});
+
+app.post("/api/register", async (req, res) => {
+  const reqBody = req.body;
+
+  Users.findOne(reqBody, async (err, data) => {
+    console.log(data);
+    if (err) {
+      const errorMsg = `Error on register user: ${err}`;
+
+      console.log(errorMsg);
+      res.send(errorMsg);
+      return;
+    }
+
+    if (data) res.send(`User already exist: ${data.username}`);
+    else {
+      const newUser = new Users(reqBody);
+      const saveNewUser = await newUser.save();
+
+      console.log(saveNewUser);
+      res.send(saveNewUser);
     }
   });
 });
