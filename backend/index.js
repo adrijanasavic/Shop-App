@@ -1,7 +1,9 @@
 const express = require("express");
 const mongoose = require("mongoose");
+const cors = require("cors");
 
 const dbConfig = require("./config/dbConfig");
+const serverConfig = require("./config/serverConfig");
 const Users = require("./models/usersModels");
 
 const app = express();
@@ -13,18 +15,20 @@ mongoose
 
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
+app.use(cors());
 
 app.post("/api/login", (req, res) => {
   const reqBody = req.body;
 
   const foundUser = Users.findOne(reqBody, (err, data) => {
+    console.log(data);
     if (err) {
-      const errMsg = `Error on getting user from DB:${err}`;
-      console.log(errMsg);
-      res.send(errMsg);
+      const errorMsg = `Error on getting user from DB: ${err}`;
+      res.send(errorMsg);
       return;
     }
-    res.send(data || "Use not found");
+    console.log(reqBody);
+    res.send(data || "User not found.");
   });
 });
 
@@ -52,10 +56,10 @@ app.post("/api/register", async (req, res) => {
   });
 });
 
-app.listen(3000, (err) => {
+app.listen(serverConfig.port, (err) => {
   if (err) {
     console.log(err);
   } else {
-    console.log("Listening on port 3000");
+    console.log(serverConfig.serverRunningMsg);
   }
 });
